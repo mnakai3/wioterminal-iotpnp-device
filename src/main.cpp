@@ -810,6 +810,21 @@ static void ProjectLoop()
 #error No project macro defined.
 #endif
 
+static int32_t mscReadCB(uint32_t lba, void* buffer, uint32_t bufsize)
+{
+    return Storage_.MscReadCB(lba, buffer, bufsize);
+}
+
+static int32_t mscWriteCB(uint32_t lba, uint8_t* buffer, uint32_t bufsize)
+{
+    return Storage_.MscWriteCB(lba, buffer, bufsize);
+}
+
+static void mscFlushCB()
+{
+    Storage_.MscFlushCB();
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // setup and loop
 
@@ -818,6 +833,8 @@ void setup()
     ////////////////////
     // Load storage
 
+    Storage_.registerCallback(mscReadCB, mscWriteCB, mscFlushCB);
+    Storage_.begin();
     Storage_.Load();
 
     ////////////////////
