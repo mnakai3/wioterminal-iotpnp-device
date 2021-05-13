@@ -817,7 +817,6 @@ void setup()
     // Load storage
 
     Storage_.Init();
-    Storage_.Begin();
     Storage_.Load();
 
     ////////////////////
@@ -839,8 +838,7 @@ void setup()
         digitalRead(WIO_KEY_B) == LOW &&
         digitalRead(WIO_KEY_C) == LOW   )
     {
-        Display_.Printf("In configuration mode\n");
-        ConfigurationMode(Storage_);
+        ConfigurationMode(Storage_, Display_);
     }
 
     ////////////////////
