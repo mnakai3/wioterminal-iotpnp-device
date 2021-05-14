@@ -5,6 +5,9 @@
 #include "SimpleMenu.h"
 #include <Network/Signature.h>
 
+#include <WiFiManager.h>
+WiFiManager configPortal;
+
 #define END_CHAR        ('\r')
 #define TAB_CHAR        ('\t')
 #define SPACE_CHAR      (' ')
@@ -20,6 +23,7 @@
 
 static Storage* Storage_;
 static SimpleMenu* Menu_;
+static LGFX* Gfx_;
 
 struct console_command 
 {
@@ -407,19 +411,47 @@ static bool CliHandleInput(char* inbuf)
     while (true);
 }
 
+void SaveConfigCallback()
+{
+    Storage_->WiFiSSID = configPortal.getSSID().c_str();
+    //Storage_->WiFiPassword = configPortal.getPassword().c_str();
+    Storage_->Save();
+}
+
+void StartApCallback(WiFiManager* config)
+{
+    Gfx_->setTextColor(TFT_WHITE, TFT_BLACK);
+    Gfx_->setFont(&fonts::Font4);
+    Gfx_->setTextDatum(textdatum_t::middle_center);
+    Gfx_->drawString(config->getConfigPortalSSID(), Gfx_->width() / 2, Gfx_->height() / 2 + 30);
+}
+
+[[noreturn]] static void ApMode()
+{
+    //ConfigPortal::WiFiManager configPortal;
+    configPortal.setAPCallback(StartApCallback);
+    configPortal.setSaveConfigCallback(SaveConfigCallback);
+    configPortal.startConfigPortal();
+
+    while (true);
+}
+
 [[noreturn]] void ConfigurationMode(Storage& storage, LGFX& gfx)
 {
     SimpleMenu Menu(gfx);
     Menu_ = &Menu;
     Storage_ = &storage;
+    Gfx_ = &gfx;
 
     enum {
         CLI_MODE = 0,
         MSD_MODE,
+        AP_MODE,
     };
     MenuItems menuItems;
     menuItems.Add(MenuItem("CLI Mode", CLI_MODE));
     menuItems.Add(MenuItem("MSD Mode", MSD_MODE));
+    menuItems.Add(MenuItem("AP Mode", AP_MODE));
 
     Menu_->init(menuItems, "- Configuration Menu -");
     MenuItem mode = Menu_->waitForSelection();
@@ -438,6 +470,10 @@ static bool CliHandleInput(char* inbuf)
 
     case MSD_MODE:
         MsdMode();
+        break;
+
+    case AP_MODE:
+        ApMode();
         break;
     }
 
