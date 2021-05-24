@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include "Config.h"
 
+#include <Seeed_Arduino_FreeRTOS.h>
+#include <Adafruit_TinyUSB.h>
 #include "ConfigurationMode.h"
 #include <GroveDriverPack.h>
 

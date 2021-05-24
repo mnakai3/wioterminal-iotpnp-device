@@ -4,6 +4,8 @@
 #include "Storage.h"
 #include <Network/Signature.h>
 
+#include "Adafruit_TinyUSB.h"
+
 #define END_CHAR        ('\r')
 #define TAB_CHAR        ('\t')
 #define SPACE_CHAR      (' ')
@@ -66,7 +68,7 @@ static void EnterBurnRTL8720Mode()
     pinMode(PIN_SERIAL2_RX, INPUT);
 
     // Initialize UART
-    Serial.beginWithoutDTR(115200);
+    Serial.begin(115200);
     auto oldBaud = Serial.baud();
     RTL8720D.begin(oldBaud);
     delay(500);
