@@ -111,7 +111,7 @@ void Storage::Erase()
 int32_t Storage::MscReadHandler(uint32_t lba, void* buffer, uint32_t bufsize)
 {
 	const sfud_flash* flash = sfud_get_device_table();
-	int addr = DISK_BLOCK_SIZE * lba + (512 * 0x01f8);
+	int addr = DISK_BLOCK_SIZE * lba;
 	// 8blocks
 	if (MscReadLba_ != lba)
 	{
@@ -133,7 +133,7 @@ int32_t Storage::MscReadHandler(uint32_t lba, void* buffer, uint32_t bufsize)
 int32_t Storage::MscWriteHandler(uint32_t lba, uint8_t* buffer, uint32_t bufsize)
 {
 	const sfud_flash* flash = sfud_get_device_table();
-	int addr = DISK_BLOCK_SIZE * lba + (512 * 0x01f8);
+	int addr = DISK_BLOCK_SIZE * lba;
 	// 8blocks
 	if (MscWriteLba_ != lba)
 	{
