@@ -4,7 +4,8 @@
 
 #include <Adafruit_TinyUSB.h>
 #include <ArduinoJson.h>
-#include <SFUD/Seeed_SFUD.h>
+#include <Seeed_SFUD.h>
+#define SPIFLASH (SFUD)
 
 #define DISK_BLOCK_NUM  (SPIFLASH.flashSize() / DISK_BLOCK_SIZE)
 #define DISK_BLOCK_SIZE (SECTORSIZE)
