@@ -936,8 +936,14 @@ void setup()
 
     ////////////////////
     // Init base component
-
+    USBDevice.detach();
+    delay(500); // wait for detach
     Serial.begin(115200);
+    // re-attach the usb device
+    USBDevice.attach();
+    // wait for enumeration
+    delay(500);
+
     Display_.Init();
     Display_.SetBrightness(DISPLAY_BRIGHTNESS);
 

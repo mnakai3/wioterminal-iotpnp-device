@@ -25,12 +25,20 @@ Storage::Storage(Adafruit_USBD_MSC& msc) :
 
 void Storage::Init()
 {
+    USBDevice.detach();
+    delay(500); // wait for detach
+
 	SPIFLASH.begin(50000000UL);
 	Msc_.setID("Seeed", "MSC", "0.1");
 	Msc_.setCapacity(DISK_BLOCK_NUM, DISK_BLOCK_SIZE);
 	Msc_.setReadWriteCallback(MscReadStaticHandler, MscWriteStaticHandler, MscFlushStaticHandler);
 	Msc_.setUnitReady(false);
 	Msc_.begin();
+
+    // re-attach the usb device
+    USBDevice.attach();
+    // wait for enumeration
+    delay(500);
 }
 
 void Storage::ActivateMsc()
